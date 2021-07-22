@@ -70,8 +70,8 @@ const btnBox = document.getElementById("btn-box");
 btnBox.addEventListener("click", function (event) {
     const button = event.target.innerText;
     if (button >= "0" && button <= "9") {
-        if(last()){
-            console.log(last());
+        if(last() || condition(input.value)){
+            console.log(last() || condition(input.value));
             if (sign.length) {
                 creatingChild(sign);
                 numbers.push(sign);
@@ -82,7 +82,7 @@ btnBox.addEventListener("click", function (event) {
             display(number);
         }
         else{
-            alert("You must enter a number now!!");
+            alert("You must enter a sign now!!");
         }
     }
     else if (condition(button)) {

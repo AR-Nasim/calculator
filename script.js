@@ -2,20 +2,20 @@ const his = document.getElementById("history");
 const calc = document.getElementById("calc");
 const input = document.getElementById("input");
 
-function lastNum(){
-    if(his.lastElementChild == undefined || his.lastElementChild.innerText == "="){
+function lastNum() {
+    if (his.lastElementChild == undefined || his.lastElementChild.innerText == "=") {
         return true;
     }
-    else{
+    else {
         return condition(his.lastElementChild.innerText);
     }
 }
 
-function lastSign(){
-    if(his.lastElementChild == undefined || his.lastElementChild.innerText == "="){
+function lastSign() {
+    if (his.lastElementChild == undefined || his.lastElementChild.innerText == "=") {
         return true;
     }
-    else{
+    else {
         return condition(his.lastElementChild.innerText);
     }
 }
@@ -61,25 +61,25 @@ function removeChild() {
     his.removeChild(his.lastElementChild);
 }
 
-function condition(ele){
-    if(ele == "+" || ele == "-" || ele == "*" || ele == "/" || ele == "%"){
+function condition(ele) {
+    if (ele == "+" || ele == "-" || ele == "*" || ele == "/" || ele == "%") {
         return true;
     }
-    else if(ele == undefined){
+    else if (ele == undefined) {
         return true;
     }
-    else{
+    else {
         return false;
     }
 }
-function condition2(ele){
-    if(ele == "+" || ele == "-" || ele == "*" || ele == "/" || ele == "%"){
+function condition2(ele) {
+    if (ele == "+" || ele == "-" || ele == "*" || ele == "/" || ele == "%") {
         return true;
     }
-    else if(ele == undefined){
+    else if (ele == undefined) {
         return false;
     }
-    else{
+    else {
         return false;
     }
 }
@@ -91,14 +91,14 @@ let numbers = [];
 const btnBox = document.getElementById("btn-box");
 
 btnBox.addEventListener("click", function (event) {
-    console.log(input.value , " " ,lastSign());
+    console.log(input.value, " ", lastSign());
     const button = event.target.innerText;
-    if(button == "00"){
+    if (button == "00") {
         number = number * 100;
         display(number);
     }
     else if (button >= "0" && button <= "9") {
-        if(lastNum() || condition(input.value)){
+        if (lastNum() || condition(input.value)) {
             if (sign.length) {
                 creatingChild(sign);
                 numbers.push(sign);
@@ -108,12 +108,13 @@ btnBox.addEventListener("click", function (event) {
             number = number * 10 + parseFloat(button);
             display(number);
         }
-        else{
+        else {
             alert("You must enter a sign now!!");
         }
     }
     else if (condition(button)) {
-         if((!condition2(input.value) && his.lastElementChild == undefined) || (!condition(input.value) && lastSign() && input.value != "")){
+        if ((!condition2(input.value) && his.lastElementChild == undefined) || (!condition(input.value) && lastSign() && input.value != "") || 
+        (!lastSign() && (input.value == "" || condition(input.value)))) {
             if (number != "ignore") {
                 creatingChild(number);
                 numbers.push(number);
@@ -122,10 +123,10 @@ btnBox.addEventListener("click", function (event) {
             sign = button;
             display(button);
         }
-        else{
+        else {
             alert("You must enter a number now!!");
         }
-        
+
     }
     else if (button == "=") {
         if (number != "ignore") {
@@ -158,21 +159,21 @@ btnBox.addEventListener("click", function (event) {
             numbers = [];
             for (let i = 0; i < prevInputs.length; i++) {
                 const element = prevInputs[i].innerText;
-                if(element == "="){
+                if (element == "=") {
                     numbers = [];
                 }
-                else if(condition(element)){
+                else if (condition(element)) {
                     numbers.push(element);
                 }
-                else{
+                else {
                     numbers.push(parseFloat(element));
                 }
             }
-            if(condition(input.value)){
-                sign = numbers[numbers.length-1];
-                number= "ignore";
+            if (condition(input.value)) {
+                sign = numbers[numbers.length - 1];
+                number = "ignore";
             }
-            else{
+            else {
                 number = parseFloat(input.value);
                 sign = "";
             }
@@ -186,11 +187,11 @@ btnBox.addEventListener("click", function (event) {
     else if (button == "AC") {
         his.innerHTML = '';
         display("");
-        number=0;
+        number = 0;
         numbers = [];
-        sign ="";
+        sign = "";
     }
-    
+
 })
 
 

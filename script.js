@@ -2,12 +2,20 @@ const his = document.getElementById("history");
 const calc = document.getElementById("calc");
 const input = document.getElementById("input");
 
-function last(){
-    if(his.lastElementChild == undefined){
+function lastNum(){
+    if(his.lastElementChild == undefined || his.lastElementChild.innerText == "="){
         return true;
     }
     else{
-        console.log(his.lastElementChild.innerText);
+        return condition(his.lastElementChild.innerText);
+    }
+}
+
+function lastSign(){
+    if(his.lastElementChild == undefined || his.lastElementChild.innerText == "="){
+        return true;
+    }
+    else{
         return condition(his.lastElementChild.innerText);
     }
 }
@@ -33,12 +41,13 @@ function calculating(oldNumbers, sign) {
     for (let i = 0; i < oldNumbers.length; i++) {
         const element = oldNumbers[i];
         if (element == sign) {
+            const total = newNumbers[newNumbers.length - 1];
             newNumbers.pop();
-            if (sign == "*") newNumbers.push(oldNumbers[i - 1] * oldNumbers[i + 1]);
-            if (sign == "/") newNumbers.push(oldNumbers[i - 1] / oldNumbers[i + 1]);
-            if (sign == "%") newNumbers.push(oldNumbers[i - 1] % oldNumbers[i + 1]);
-            if (sign == "+") newNumbers.push(oldNumbers[i - 1] + oldNumbers[i + 1]);
-            if (sign == "-") newNumbers.push(oldNumbers[i - 1] - oldNumbers[i + 1]);
+            if (sign == "*") newNumbers.push(total * oldNumbers[i + 1]);
+            if (sign == "/") newNumbers.push(total / oldNumbers[i + 1]);
+            if (sign == "%") newNumbers.push(total % oldNumbers[i + 1]);
+            if (sign == "+") newNumbers.push(total + oldNumbers[i + 1]);
+            if (sign == "-") newNumbers.push(total - oldNumbers[i + 1]);
             i++;
         }
         else {
@@ -56,6 +65,20 @@ function condition(ele){
     if(ele == "+" || ele == "-" || ele == "*" || ele == "/" || ele == "%"){
         return true;
     }
+    else if(ele == undefined){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+function condition2(ele){
+    if(ele == "+" || ele == "-" || ele == "*" || ele == "/" || ele == "%"){
+        return true;
+    }
+    else if(ele == undefined){
+        return false;
+    }
     else{
         return false;
     }
@@ -68,10 +91,14 @@ let numbers = [];
 const btnBox = document.getElementById("btn-box");
 
 btnBox.addEventListener("click", function (event) {
+    console.log(input.value , " " ,lastSign());
     const button = event.target.innerText;
-    if (button >= "0" && button <= "9") {
-        if(last() || condition(input.value)){
-            console.log(last() || condition(input.value));
+    if(button == "00"){
+        number = number * 100;
+        display(number);
+    }
+    else if (button >= "0" && button <= "9") {
+        if(lastNum() || condition(input.value)){
             if (sign.length) {
                 creatingChild(sign);
                 numbers.push(sign);
@@ -86,13 +113,19 @@ btnBox.addEventListener("click", function (event) {
         }
     }
     else if (condition(button)) {
-        if (number != "ignore") {
-            creatingChild(number);
-            numbers.push(number);
+         if((!condition2(input.value) && his.lastElementChild == undefined) || (!condition(input.value) && lastSign() && input.value != "")){
+            if (number != "ignore") {
+                creatingChild(number);
+                numbers.push(number);
+            }
+            number = "ignore";
+            sign = button;
+            display(button);
         }
-        number = "ignore";
-        sign = button;
-        display(button);
+        else{
+            alert("You must enter a number now!!");
+        }
+        
     }
     else if (button == "=") {
         if (number != "ignore") {
@@ -102,12 +135,13 @@ btnBox.addEventListener("click", function (event) {
         numbers = calculating(numbers, "*");
         numbers = calculating(numbers, "/");
         numbers = calculating(numbers, "%");
-        numbers = calculating(numbers, "+");
         numbers = calculating(numbers, "-");
+        numbers = calculating(numbers, "+");
         creatingChild("=");
         display("");
         number = numbers[0];
         input.value = number;
+        numbers = [];
         sign = "";
     }
     else if (button == "<") {
@@ -156,6 +190,7 @@ btnBox.addEventListener("click", function (event) {
         numbers = [];
         sign ="";
     }
+    
 })
 
 
